@@ -1,6 +1,7 @@
 from .models import CustomUser
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
+from .models import UserProfile
 
 User=get_user_model()
 
@@ -54,3 +55,13 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError({"error":"Invalid Password"})
         attrs['user']=user
         return attrs
+
+class UserProfileSerializer(serializers.ModelSerializer):
+    email=serializers.EmailField(source='user.email',read_only=True)
+    is_subscribed=serializers.BooleanField(source='user.is_subscribed',read_only=True)
+    class Meta:
+        model=UserProfile
+        fields=['id','bio','profile_picture','first_name','last_name','email','is_subscribed','created_at','updated_at']
+        read_only_fields=['created_at','updated_at']
+
+
