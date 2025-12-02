@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .serializers import RegistrationSerializer,LoginSerializer,UserProfileSerializer
+from .serializers import RegistrationSerializer,LoginSerializer,UserProfileSerializer,LogoutSerializer
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -50,3 +50,18 @@ class UserProfileView(ModelViewSet):
     serializer_class=UserProfileSerializer
     def get_queryset(self):
         return UserProfile.objects.select_related('user').filter(user=self.request.user)
+    
+
+
+class LogoutView(APIView):
+    def post(self,request):
+        serializer=LogoutSerializer(data=request.data)
+        if serializer.is_valid():
+            refresh_token=serializer.validated_data['refresh']
+            try:
+                token=RefreshToken(refresh_token)
+                token.blacklist()
+                return Response({"message":"Logout successful"},status=status.HTTP_200_OK)
+            except Exception as e:
+                return Response({"error":"Invalid token"},status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)

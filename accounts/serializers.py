@@ -65,3 +65,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         read_only_fields=['created_at','updated_at']
 
 
+
+
+class LogoutSerializer(serializers.Serializer):
+    refresh=serializers.CharField()
