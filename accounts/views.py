@@ -6,8 +6,8 @@ from rest_framework.views import APIView
 from rest_framework import permissions
 from rest_framework.viewsets import ModelViewSet
 from rest_framework_simplejwt.tokens import RefreshToken
-# Create your views here.
 
+# Create your views here.
 
 class RegistrationView(APIView):
     def post(self,request):
