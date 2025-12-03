@@ -48,8 +48,8 @@ STATUS=(
 
 class InvoiceModel(models.Model):
     user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='invoices')
-    plan=models.ForeignKey(Plan,on_delete=models.SET_NULL,related_name="plan_invoices")
-    invoice_id=models.CharField(unique=True)
+    plan=models.ForeignKey(Plan,on_delete=models.SET_NULL,related_name="plan_invoices",null=True)
+    invoice_id=models.CharField(unique=True,null=True,blank=True)
     start_date=models.DateTimeField()
     end_date=models.DateTimeField()
     duration=models.CharField(choices=DURATION_TYPE,max_length=10)
@@ -57,5 +57,6 @@ class InvoiceModel(models.Model):
     status=models.CharField(choices=STATUS,max_length=10,default="paid")
     created_at=models.DateTimeField(auto_now_add=True)
     updated_at=models.DateTimeField(auto_now=True)
+
 
     
