@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .serializers import PlanSerializer,SubscriptionSerializer
+from .serializers import PlanSerializer,SubscriptionSerializer,InvoiceSerializer
 from .models import Plan,Subscription
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions
@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 import stripe
+from rest_framework.exceptions import PermissionDenied
 
 # Create your views here.
 
@@ -101,3 +102,37 @@ class CreateCheckoutSessionView(APIView):
 
         except Exception as e:
             return Response({"error ms": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+from .models import InvoiceModel
+class InvoiceView(APIView):
+    permission_classes=[permissions.IsAuthenticated]
+    def get(self, request, *args, **kwargs):
+        data=InvoiceModel.objects.select_related("user","plan")
+        user=self.request.user
+        if not user.is_staff:
+            data=data.filter(user=user)
+        serializer=InvoiceSerializer(data,many=True)
+        return Response(serializer.data)
+    
+    def patch(self, request, *args, **kwargs):
+        user=request.user
+
+        if not user.is_staff:
+            return PermissionDenied("Only Admin have permission",status=status.HTTP_403_FORBIDDEN)
+    
+        invoice_id=kwargs.get("pk")
+
+        try:
+            invoices=InvoiceModel.objects.select_related("user","plan").get(id=invoice_id)
+        except Exception:
+            return  Response({"detail": "Invoice not found"},status=status.HTTP_404_NOT_FOUND)
+        serializer=InvoiceSerializer(invoices,data=request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data,status=status.HTTP_206_PARTIAL_CONTENT)
+        return Response(serializer.errors)
+    
+
+
+

@@ -32,3 +32,10 @@ class SubscriptionSerializer(serializers.ModelSerializer):
 
 
         return attrs
+
+from .models import InvoiceModel
+class InvoiceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model=InvoiceModel
+        fields="__all__"
+        read_only_fields=["created_at","updated_at"]
