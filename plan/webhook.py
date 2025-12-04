@@ -5,17 +5,21 @@ import stripe
 from .models import Plan,Subscription
 from django.contrib.auth import get_user_model
 from datetime import timezone,timedelta,datetime
+from django.conf import settings
 User=get_user_model()
-@csrf_exempt
 
+
+webhook_secrect=settings.STRIPE_WEBHOOK_KEY
+@csrf_exempt
 def stripe_webhook(request):
     payload=request.body
     sig_header=request.META.get('HTTP_STRIPE_SIGNATURE')
-    endpoint_secret='your_endpoint_secret'
+
 
     try:
         event=stripe.Webhook.construct_event(
-            payload,sig_header,endpoint_secret
+            payload,sig_header,webhook_secrect
+
         )
     except ValueError as e:
         return JsonResponse({'status':'invalid payload'},status=400)

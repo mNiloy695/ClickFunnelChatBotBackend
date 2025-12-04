@@ -9,9 +9,6 @@ class PlanSerializer(serializers.ModelSerializer):
         read_only_fields=['created_at','updated_at']
 
 
-
-
-
 class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
         model=Plan
@@ -30,7 +27,6 @@ class SubscriptionSerializer(serializers.ModelSerializer):
         if not duration:
             raise serializers.ValidationError({"error":"Duration is required"})
 
-
         return attrs
 
 from .models import InvoiceModel
@@ -38,4 +34,4 @@ class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model=InvoiceModel
         fields="__all__"
-        read_only_fields=["created_at","updated_at"]
+        read_only_fields=["created_at","updated_at","invoice_id"]
