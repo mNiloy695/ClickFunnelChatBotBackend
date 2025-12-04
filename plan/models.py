@@ -16,7 +16,7 @@ DURATION_TYPE=(
 class Plan(models.Model):
     name=models.CharField(max_length=100)
     description=models.TextField(null=True,blank=True)
-    stripe_product_price_id=models.CharField(max_length=1000,null=True,blank=True)
+    stripe_product_price_id=models.CharField(max_length=1000,null=True)
     price=models.DecimalField(max_digits=10,decimal_places=2)
     duration=models.CharField(choices=DURATION_TYPE,max_length=20)
     created_at=models.DateTimeField(auto_now_add=True)
@@ -56,7 +56,10 @@ class InvoiceModel(models.Model):
     amount=models.DecimalField(max_digits=10,decimal_places=2)
     status=models.CharField(choices=STATUS,max_length=10,default="paid")
     created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
+    updated_at=models.DateTimeField(auto_now=True) 
+
+
+
 
 
     

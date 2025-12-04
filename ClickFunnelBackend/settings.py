@@ -27,10 +27,22 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
+    "overrigged-botanically-lila.ngrok-free.dev",
 ]
-CORRS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:8082/",
+CORS_ALLOWED_ORIGINS = [
+    "http://127.0.0.1:8082",
+    "https://overrigged-botanically-lila.ngrok-free.dev"
 ]
+
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://overrigged-botanically-lila.ngrok-free.dev",
+]
+
+
+
+
+
 
 # Application definition
 

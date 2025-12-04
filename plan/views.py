@@ -8,6 +8,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 import stripe
 from rest_framework.exceptions import PermissionDenied
+from django.conf import settings
+stripe.api_key=settings.STRIPE_SECRET_KEY
 
 # Create your views here.
 
@@ -26,7 +28,7 @@ class PlanView(ModelViewSet):
 
 class SubscriptionView(ModelViewSet):
     queryset=Subscription.objects.select_related('user','plan')
-    serializer_class=PlanSerializer
+    serializer_class=SubscriptionSerializer
     def get_permissions(self):
         if self.request.method in permissions.SAFE_METHODS:
             return [permissions.IsAuthenticated()]

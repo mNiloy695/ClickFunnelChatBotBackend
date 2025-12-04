@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Plan
+from .models import Plan,Subscription
 
 
 class PlanSerializer(serializers.ModelSerializer):
@@ -7,11 +7,15 @@ class PlanSerializer(serializers.ModelSerializer):
         model=Plan
         fields='__all__'
         read_only_fields=['created_at','updated_at']
-
+    def validate(self, attrs):
+        stripe_product_price_id=attrs.get('stripe_product_price_id')
+        if not stripe_product_price_id:
+            raise serializers.ValidationError({"error":"stripe_product_price_id is required"})
+        return attrs
 
 class SubscriptionSerializer(serializers.ModelSerializer):
     class Meta:
-        model=Plan
+        model=Subscription
         fields='__all__'
         read_only_fields=['created_at','updated_at','price','is_active']
     

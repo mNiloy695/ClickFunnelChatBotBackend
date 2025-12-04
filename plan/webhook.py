@@ -4,7 +4,8 @@ from .models import Subscription,Plan
 import stripe
 from .models import Plan,Subscription
 from django.contrib.auth import get_user_model
-from datetime import timezone,timedelta,datetime
+from datetime import timedelta,datetime
+from django.utils import timezone
 from django.conf import settings
 User=get_user_model()
 
@@ -60,7 +61,7 @@ def stripe_webhook(request):
             if duration=="monthly":
                 subscription.duration=now+timedelta(days=30)
             if duration=="weekly":
-                subscription.end_date=now()+timedelta(days=7)
+                subscription.end_date=now+timedelta(days=7)
             
             subscription.is_active=True
 
